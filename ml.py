@@ -72,9 +72,8 @@ dataset[retweet_column] = dataset[retweet_column].astype(int)
 
 dataset.to_excel("newdataset.xlsx",index=False)
 newdataset= pd.read_excel("newdataset.xlsx") 
-newdataset
 
-text_column = dataset["Text"]
+text_column = newdataset["Text"]
 #kelime sayısını ayırma
 def countOfWord(text):
     liste = []
@@ -84,7 +83,7 @@ def countOfWord(text):
 
 countOfText = countOfWord(text_column)
 
-dataset["countOfWords"] = countOfText
+newdataset["countOfWords"] = countOfText
 
 data_positive = pd.read_csv("PositiveWordsEng.csv")
 data_negative = pd.read_csv("NegativeWordsEng.csv")
@@ -106,9 +105,9 @@ countOfPositive = search_tw(data_positive,text_column)
 countOfNegative = search_tw(data_negative,text_column)
 
 
-dataset["countOfPositive"] = countOfPositive
+newdataset["countOfPositive"] = countOfPositive
 
-dataset["countOfNegative"] = countOfNegative
+newdataset["countOfNegative"] = countOfNegative
 
 #########################
 print(dataset)
