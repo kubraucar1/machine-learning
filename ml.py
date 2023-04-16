@@ -110,4 +110,6 @@ newdataset["countOfPositive"] = countOfPositive
 newdataset["countOfNegative"] = countOfNegative
 
 #########################
+
+newdataset.to_csv("newdataset.csv",index=False)
 print(dataset)
