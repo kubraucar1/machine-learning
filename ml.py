@@ -17,49 +17,23 @@ view_column = 'View count'
 
 dataset[like_column]
 
-for i in range(len(dataset)):
-    deger = str(dataset.at[i, like_column])
-    if 'K' in deger:
-        deger = deger.replace('K', '')
-        deger = float(deger) * 1000
-        dataset.at[i, like_column] = int(deger)
-    elif  'M' in deger:
-        deger = deger.replace('M', '')
-        deger = float(deger) * 1000000
-        dataset.at[i, like_column] = int(deger)
+def convert_k_m(column_name):
+    for i in range(len(dataset)):
+        deger = str(dataset.at[i, column_name])
+        if 'K' in deger:
+            deger = deger.replace('K', '')
+            deger = float(deger) * 1000
+            dataset.at[i, column_name] = int(deger)
+        elif  'M' in deger:
+            deger = deger.replace('M', '')
+            deger = float(deger) * 1000000
+            dataset.at[i, column_name] = int(deger)
         
-for i in range(len(dataset)):
-    deger = str(dataset.at[i, view_column])
-    if 'K' in deger:
-        deger = deger.replace('K', '')
-        deger = float(deger) * 1000
-        dataset.at[i, view_column] = int(deger)
-    elif 'M' in deger:
-        deger = deger.replace('M', '')
-        deger = float(deger) * 1000000
-        dataset.at[i, view_column] = int(deger)
-        
-dataset[view_column]
-for i in range(len(dataset)):
-    deger = str(dataset.at[i, comment_column])
-    if 'K' in deger:
-        deger = deger.replace('K', '')
-        deger = float(deger) * 1000
-        dataset.at[i,comment_column] = int(deger)
-    elif 'M' in deger:
-        deger = deger.replace('M', '')
-        deger = float(deger) * 1000000
-        dataset.at[i, comment_column] = int(deger)
-for i in range(len(dataset)):
-    deger = str(dataset.at[i, retweet_column])
-    if 'K' in deger:
-        deger = deger.replace('K', '')
-        deger = float(deger) * 1000
-        dataset.at[i,retweet_column] = int(deger)
-    elif 'M' in deger:
-        deger = deger.replace('M', '')
-        deger = float(deger) * 1000000
-        dataset.at[i, retweet_column] = int(deger)       
+convert_k_m(like_column)
+convert_k_m(comment_column)
+convert_k_m(retweet_column)
+convert_k_m(view_column)
+
 
 dataset[comment_column].fillna(0, inplace=True)
 dataset[comment_column] = dataset[comment_column].astype(int)
