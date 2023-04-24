@@ -4,9 +4,9 @@ import numpy as np
 #project
 
 dataset= pd.read_excel("all_tweets.xlsx") 
-print("number of rows in the original dataset",len(dataset))
+#print("number of rows in the original dataset",len(dataset))
 dataset.drop_duplicates(inplace=True)
-print("Number of rows in the cleaned dataset:",len(dataset))
+#print("Number of rows in the cleaned dataset:",len(dataset))
 pd.read_excel("all_tweets.xlsx") 
 dataset.dropna()
 
@@ -44,10 +44,8 @@ dataset[view_column] = dataset[view_column].astype(int)
 dataset[retweet_column].fillna(0, inplace=True)
 dataset[retweet_column] = dataset[retweet_column].astype(int)
 
-dataset.to_excel("newdataset.xlsx",index=False)
-newdataset= pd.read_excel("newdataset.xlsx") 
 
-text_column = newdataset["Text"]
+text_column = dataset["Text"]
 #kelime sayısını ayırma
 def countOfWord(text):
     liste = []
@@ -57,7 +55,7 @@ def countOfWord(text):
 
 countOfText = countOfWord(text_column)
 
-newdataset["countOfWords"] = countOfText
+dataset["countOfWords"] = countOfText
 
 data_positive = pd.read_csv("PositiveWordsEng.csv")
 data_negative = pd.read_csv("NegativeWordsEng.csv")
@@ -79,11 +77,29 @@ countOfPositive = search_tw(data_positive,text_column)
 countOfNegative = search_tw(data_negative,text_column)
 
 
-newdataset["countOfPositive"] = countOfPositive
+dataset["countOfPositive"] = countOfPositive
 
-newdataset["countOfNegative"] = countOfNegative
+dataset["countOfNegative"] = countOfNegative
 
 #########################
 
-newdataset.to_csv("newdataset.csv",index=False)
-print(dataset)
+#print(dataset)
+
+##kubra
+one_hot_df = pd.get_dummies(dataset['Title'])
+dataset['ID'] = range(1, len(dataset) + 1)
+one_hot_df['ID'] = range(1, len(one_hot_df) + 1)
+
+
+one_hot_df[one_hot_df == True] = "1"
+one_hot_df[one_hot_df == False] = "0"
+
+merged_df = pd.merge(dataset, one_hot_df, on='ID')
+
+merged_df = merged_df.drop('ID',axis=1)
+merged_df = merged_df.drop('Title',axis=1)
+merged_df.to_csv("dataset.csv.",index=False)
+dataset = pd.read_csv('dataset.csv')
+
+
+dataset
