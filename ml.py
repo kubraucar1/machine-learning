@@ -83,7 +83,9 @@ dataset["countOfNegative"] = countOfNegative
 
 #########################
 
-#print(dataset)
+print(dataset)
+classification_df=dataset.to_csv('classification_df.csv',index=False)
+
 
 ##kubra
 one_hot_df = pd.get_dummies(dataset['Title'])
