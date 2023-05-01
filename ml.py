@@ -100,6 +100,52 @@ merged_df = merged_df.drop('ID',axis=1)
 merged_df = merged_df.drop('Title',axis=1)
 merged_df.to_csv("dataset.csv.",index=False)
 dataset = pd.read_csv('dataset.csv')
-
-
-dataset
+ ############################
+ 
+ #Text mining
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
