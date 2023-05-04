@@ -10,11 +10,11 @@ import numpy as np
 
 #project
 
-dataset= pd.read_excel("all_tweets.xlsx") 
+dataset= pd.read_excel("data_preprocessing/all_tweets.xlsx") 
 #print("number of rows in the original dataset",len(dataset))
 dataset.drop_duplicates(inplace=True)
 #print("Number of rows in the cleaned dataset:",len(dataset))
-pd.read_excel("all_tweets.xlsx") 
+pd.read_excel("data_preprocessing/all_tweets.xlsx") 
 dataset.dropna()
 
 like_column = 'Like Count'
@@ -64,8 +64,8 @@ countOfText = countOfWord(text_column)
 
 dataset["countOfWords"] = countOfText
 
-data_positive = pd.read_csv("PositiveWordsEng.csv")
-data_negative = pd.read_csv("NegativeWordsEng.csv")
+data_positive = pd.read_csv("data_preprocessing/PositiveWordsEng.csv")
+data_negative = pd.read_csv("data_preprocessing/NegativeWordsEng.csv")
 data_positive = data_positive["PositiveWords"]
 data_negative = data_negative["NegativeWords"]
 
@@ -91,8 +91,8 @@ dataset["countOfNegative"] = countOfNegative
 #########################
 
 print(dataset)
-classification_df=dataset.to_csv('classification_df.csv',index=False)
-classification_df=pd.read_csv('classification_df.csv')
+#classification_df=dataset.to_csv('cl_dataset.csv',index=False)
+classification_df=pd.read_csv('data_preprocessing/cl_dataset.csv')
 
 ##kubra
 """
@@ -122,9 +122,9 @@ from sklearn.metrics import accuracy_score
 
 print(classification_df)
 
-x=classification_df.drop(['Title','Text','User Name','Date of Tweet'],axis=1)
+x=classification_df.drop(['Title'],axis=1)
 y=classification_df['Title']
-X_train, X_test, y_train, y_test = train_test_split(x,y, test_size=0.20, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(x,y, test_size=0.33, random_state=42)
 
 # Instantiate the random forest model
 rf_model = RandomForestClassifier(n_estimators=100, random_state=42)
@@ -138,3 +138,4 @@ y_pred = rf_model.predict(X_test)
 # Calculate the accuracy of the model
 accuracy = accuracy_score(y_test, y_pred)
 print(f"Accuracy: {accuracy}")
+#Accuracy: 0.9578947368421052            last result 
