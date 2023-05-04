@@ -85,9 +85,12 @@ dataset["countOfNegative"] = countOfNegative
 
 print(dataset)
 classification_df=dataset.to_csv('classification_df.csv',index=False)
-
+classification_df=pd.read_csv('classification_df.csv')
 
 ##kubra
+"""
+one-hot encoding işleleri classification için gerekli değil
+
 one_hot_df = pd.get_dummies(dataset['Title'])
 dataset['ID'] = range(1, len(dataset) + 1)
 one_hot_df['ID'] = range(1, len(one_hot_df) + 1)
@@ -105,3 +108,26 @@ dataset = pd.read_csv('dataset.csv')
 
 
 dataset
+"""
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+
+print(classification_df)
+
+x=classification_df.drop(['Title','Text','User Name','Date of Tweet'],axis=1)
+y=classification_df['Title']
+X_train, X_test, y_train, y_test = train_test_split(x,y, test_size=0.20, random_state=42)
+
+# Instantiate the random forest model
+rf_model = RandomForestClassifier(n_estimators=100, random_state=42)
+
+# Fit the model to the training data
+rf_model.fit(X_train, y_train)
+
+# Make predictions on the testing data
+y_pred = rf_model.predict(X_test)
+
+# Calculate the accuracy of the model
+accuracy = accuracy_score(y_test, y_pred)
+print(f"Accuracy: {accuracy}")
