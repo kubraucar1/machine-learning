@@ -5,8 +5,7 @@ Created on Sat May  6 11:54:30 2023
 
 @author: esmanur
 """
-import warnings
-warnings.filterwarnings('ignore', category=FutureWarning)
+
 
 import pandas as pd
 import numpy as np
