@@ -135,4 +135,4 @@ print("Davies score dbscn: ", dav_dbscn)
 dav_dbscn = davies_bouldin_score(X,gmm_cluster)
 print("Davies score gmm: ",dav_dbscn)
 
-
+###
