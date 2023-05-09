@@ -95,10 +95,11 @@ gmm_cluster = gmm.fit_predict(df_scaled)
 
 
 
+#algoritma karşılaştırma
 
 from sklearn.metrics import silhouette_score
 
-#DBSCN ve K Means karşılaştırmsa
+
 
 score_dbscn = silhouette_score(X, dbscn.labels_)
 score_kmeans = silhouette_score(X, kmeans.labels_)
@@ -135,4 +136,4 @@ print("Davies score dbscn: ", dav_dbscn)
 dav_dbscn = davies_bouldin_score(X,gmm_cluster)
 print("Davies score gmm: ",dav_dbscn)
 
-###
+####
