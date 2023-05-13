@@ -33,26 +33,25 @@ clusters = dbscn.fit_predict(df_scaled)
 
 #print(clusters)
 
-outliers = np.where(clusters == -1)
-#print(outliers)
+outliers_dbscn = np.where(clusters == -1)
 
-
-"""
-plt.scatter(df_scaled[:, 2], df_scaled[:, 1])
+plt.scatter(df_scaled[:, 2], df_scaled[:, 1], c="blue", alpha=0.5)
+# Aykırı verileri ayrıca görselleştirme
+plt.scatter(df_scaled[outliers_dbscn, 2], df_scaled[outliers_dbscn, 1], c='red', marker='x', alpha=1)
 plt.xlabel("Comment Count")
-plt.ylabel("Lİke Count")
+plt.ylabel("Like Count")
 plt.show()
 
-plt.scatter(df_scaled[:, 2], df_scaled[:, 1], c=clusters) #mor olanlar outlier
-plt.xlabel("Comment Count")
-plt.ylabel("Lİke Count")
-plt.show()
-"""
+
+print("Number of outliers:", len(outliers_dbscn))
+print(outliers_dbscn)
 
 #data_o = data.drop(outliers[0],axis = 0)
 
+######################################################
+
 # K-means kümeleme
-kmeans = KMeans(n_clusters=2, random_state=1, n_init="auto").fit(df_scaled) #2 cluster'a sahipken daha yüksek değer veriyor
+kmeans = KMeans(n_clusters=2, random_state=1, n_init="auto").fit(df_scaled)
 clusters_kmean = kmeans.fit_predict(df_scaled)
 
 
@@ -62,15 +61,22 @@ std_dev = np.std(distances, axis=0)
 mean_dist = np.mean(distances, axis=0)
 
 threshold = mean_dist + 2 * std_dev #Normal Distribution
-outliers = np.where(np.any(distances > threshold, axis=1))[0]
-"""
-plt.scatter(df_scaled[:, 2], df_scaled[:, 1], c=clusters_kmean) #mor olanlar outlier
+outliers_kmean = np.where(np.any(distances > threshold, axis=1))[0]
+
+plt.scatter(df_scaled[:, 2], df_scaled[:, 1], c="blue", alpha=0.5)
+# Aykırı verileri ayrıca görselleştirme
+plt.scatter(df_scaled[outliers_kmean, 2], df_scaled[outliers_kmean, 1], c='red', marker='x', alpha=1)
 plt.xlabel("Comment Count")
-plt.ylabel("Lİke Count")
+plt.ylabel("Like Count")
 plt.show()
-"""
-print("Number of outliers:", len(outliers))
-print(outliers)
+
+
+
+print("Number of outliers:", len(outliers_kmean))
+print(outliers_kmean)
+
+######################################################
+#GMM Cluster
 
 from sklearn import metrics
 from sklearn.mixture import GaussianMixture
@@ -91,11 +97,24 @@ for i in parameters:
 
 
 
+
 gmm = GaussianMixture(n_components=2,covariance_type="spherical",random_state=123)
 gmm_cluster = gmm.fit_predict(df_scaled)
 
+#thresholz Z-score a göre yapılmıştır
+outliers_gmm = np.where(threshold > 3)[0]
+
+plt.scatter(df_scaled[:, 2], df_scaled[:, 1], c="blue", alpha=0.5)
+plt.scatter(df_scaled[outliers_gmm, 2], df_scaled[outliers_gmm, 1], c='red', marker='x')
+plt.xlabel("Comment Count")
+plt.ylabel("Like Count")
+plt.show()
+
+print("Aykırı veri sayısı:", len(outliers_gmm))
+print(outliers_gmm)
 
 
+############################################################
 #algoritma karşılaştırma
 
 from sklearn.metrics import silhouette_score
