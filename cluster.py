@@ -6,6 +6,8 @@ Created on Sat May  6 11:54:30 2023
 @author: esmanur
 """
 
+import warnings
+warnings.filterwarnings('ignore', category=FutureWarning)
 
 import pandas as pd
 import numpy as np
@@ -26,7 +28,7 @@ y = data["Like Count"]
 scaler = StandardScaler()
 df_scaled = scaler.fit_transform(X)
 
-dbscn = DBSCAN(eps=3.227, min_samples=5,metric="euclidean") #değiştirince azaldı orangedan baktım
+dbscn = DBSCAN(eps=3.227, min_samples=2,metric="euclidean") #değiştirince azaldı orangedan baktım
 clusters = dbscn.fit_predict(df_scaled)
 
 #print(clusters)
@@ -50,7 +52,7 @@ plt.show()
 #data_o = data.drop(outliers[0],axis = 0)
 
 # K-means kümeleme
-kmeans = KMeans(n_clusters=5, random_state=1, n_init="auto").fit(df_scaled) #2 cluster'a sahipken daha yüksek değer veriyor
+kmeans = KMeans(n_clusters=2, random_state=1, n_init="auto").fit(df_scaled) #2 cluster'a sahipken daha yüksek değer veriyor
 clusters_kmean = kmeans.fit_predict(df_scaled)
 
 
@@ -67,8 +69,8 @@ plt.xlabel("Comment Count")
 plt.ylabel("Lİke Count")
 plt.show()
 """
-#print("Number of outliers:", len(outliers))
-#print(outliers)
+print("Number of outliers:", len(outliers))
+print(outliers)
 
 from sklearn import metrics
 from sklearn.mixture import GaussianMixture
@@ -89,7 +91,7 @@ for i in parameters:
 
 
 
-gmm = GaussianMixture(n_components=5,covariance_type="diag",random_state=123)
+gmm = GaussianMixture(n_components=2,covariance_type="spherical",random_state=123)
 gmm_cluster = gmm.fit_predict(df_scaled)
 
 
@@ -136,3 +138,4 @@ dav_dbscn = davies_bouldin_score(X,gmm_cluster)
 print("Davies score gmm: ",dav_dbscn)
 
 ####
+
