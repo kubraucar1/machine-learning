@@ -1,14 +1,25 @@
 import pandas as pd
 import numpy as np
-
+import seaborn as sns
+import matplotlib.pyplot as plt
 #project
 
 dataset= pd.read_excel("all_tweets.xlsx") 
 #print("number of rows in the original dataset",len(dataset))
+#print(dataset.head())
+#print(dataset.shape)
+#print(dataset.columns)
+#print(dataset.describe())
+#print(dataset.info())
+#print(dataset.corr())
+
+#dataset.hist()
+#print(dataset["Title"].unique())
+
+
+
 dataset.drop_duplicates(inplace=True)
-#print("Number of rows in the cleaned dataset:",len(dataset))
-pd.read_excel("all_tweets.xlsx") 
-dataset.dropna()
+#pd.read_excel("all_tweets.xlsx") 
 
 like_column = 'Like Count'
 comment_column = 'Comment Count'
@@ -35,14 +46,6 @@ convert_k_m(retweet_column)
 convert_k_m(view_column)
 
 
-dataset[comment_column].fillna(0, inplace=True)
-dataset[comment_column] = dataset[comment_column].astype(int)
-dataset[like_column].fillna(0, inplace=True)
-dataset[like_column] = dataset[like_column].astype(int)
-dataset[view_column].fillna(0, inplace=True)
-dataset[view_column] = dataset[view_column].astype(int)
-dataset[retweet_column].fillna(0, inplace=True)
-dataset[retweet_column] = dataset[retweet_column].astype(int)
 
 
 text_column = dataset["Text"]
@@ -83,7 +86,10 @@ dataset["countOfNegative"] = countOfNegative
 
 dataset.to_csv("dataset_c.csv",index=False)
 
+#print(dataset.columns)
+
 #########################
+
 
 #for regression
 
@@ -101,7 +107,7 @@ merged_df = merged_df.drop('ID',axis=1)
 merged_df = merged_df.drop('Title',axis=1)                              
 merged_df.to_csv("dataset_reg.csv",index=False)
 
-
+#print(dataset.columns)
 
 
 
@@ -178,12 +184,24 @@ text_df = data_x[columns]
 text_df.index.name ="Id"
 text_df.to_csv("text_df.csv",index=True)
 
+
 #dataset for regression
 text_df = pd.read_csv("text_df.csv")
 dataset = pd.read_csv("dataset_reg.csv")
 dataset = dataset.drop("Text",axis=1)
 dataset = dataset.drop("User Name",axis=1)
 dataset = dataset.drop("Date of Tweet",axis=1)
+
+dataset.dropna(inplace=True)
+#print("Number of rows in the cleaned dataset:",len(dataset))
+#print(dataset.info())
+
+
+dataset[comment_column] = dataset[comment_column].astype(int)
+dataset[like_column] = dataset[like_column].astype(int)
+dataset[view_column] = dataset[view_column].astype(int)
+dataset[retweet_column] = dataset[retweet_column].astype(int)
+
 
 dataset.to_csv("dataset_reg_noText.csv",index=False)
 dataset_noText = dataset = pd.read_csv("dataset_reg_noText.csv")
@@ -209,51 +227,3 @@ merged_df.to_csv("cl_dataset.csv",index=False)
 
 data_new = pd.read_csv("cl_dataset.csv")
 
-
-
-
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
