@@ -12,29 +12,76 @@ warnings.filterwarnings('ignore', category=FutureWarning)
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import seaborn as sns
 
 ####################################################
-#Data read and Scale
-from sklearn.preprocessing import StandardScaler
-
+#Data read 
 data = pd.read_csv("data_preprocessing/reg_dataset.csv")
 
 X = data.drop(["Like Count"], axis=1)
 y = data["Like Count"]
+"""
+data.info()
 
+
+data["LikeCount"] = data["Like Count"]
+data["CommentCount"] = data["Comment Count"]
+data["ViewCount"] = data["View count"]
+####################################################
+
+sns.kdeplot(data["LikeCount"]) #yoğunluk
+plt.show()
+
+sns.distplot(data['LikeCount'], bins=30, kde=False)
+plt.show()
+
+sns.jointplot(x ='CommentCount', y='LikeCount', data=data[data['LikeCount'] > 1000],kind='hex', 
+              gridsize=20)
+plt.show()
+
+sns.violinplot(
+    x='ViewCount',
+    y='LikeCount',
+    data=data[data.ViewCount.isin(data.ViewCount.value_counts()[:5].index)]
+)
+plt.show()
+
+
+plt.figure(figsize=(10,10))
+sns.boxplot(x="CommentCount", y="LikeCount",  data=data.iloc[:200])
+plt.xticks(rotation=90)
+
+sns.jointplot(data=X, x='Comment Count', y='View count', kind="reg", color="#ce1414")
+
+
+for feature in X.columns:
+    plt.hist(data[feature], bins=20)
+    plt.xlabel(feature)
+    plt.ylabel("Frequency")
+    plt.show()
+    
+# İki özelliğin ilişkisini gösteren scatter plot
+plt.scatter(data["Like Count"], data['Comment Count'])
+plt.ylabel("Like Count")
+plt.xlabel('Comment Count')
+plt.show()   
+"""
+#####################################################
+#Scale
+from sklearn.preprocessing import StandardScaler
 scaler = StandardScaler()
 df_scaled = scaler.fit_transform(X)
 
-"""
-Train kısmında outlierları çıkarıp modeli eğiteceğim sonra test kısmında outlier çıkarımı yapmadan modeli eğiteceğim
-Ardından en iyi farkı veren ile outlier çıkarımı modelini kaydedeceğim
-"""
+
+#Train kısmında outlierları çıkarıp modeli eğiteceğim sonra test kısmında outlier çıkarımı yapmadan modeli eğiteceğim
+#Ardından en iyi farkı veren ile outlier çıkarımı modelini kaydedeceğim
+
 
 #####################################################
 #train test split
 from sklearn.model_selection import train_test_split
 
-X_train, X_test, y_train, y_test = train_test_split(df_scaled,y, test_size=0.33, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(df_scaled,y, test_size=0.30, random_state=42)
 
 
 ######################################################
@@ -43,7 +90,7 @@ X_train, X_test, y_train, y_test = train_test_split(df_scaled,y, test_size=0.33,
 from sklearn.cluster import DBSCAN
 
 
-dbscn = DBSCAN(eps=3.227, min_samples=2,metric="euclidean") 
+dbscn = DBSCAN(eps=2.462, min_samples=2,metric="euclidean") 
 clusters_dbscn = dbscn.fit_predict(X_train)
 
 
@@ -54,6 +101,7 @@ plt.scatter(X_train[:, 2], X_train[:, 1], c="blue", alpha=0.5)
 plt.scatter(X_train[outliers_dbscn, 2], X_train[outliers_dbscn, 1], c='red', marker='x', alpha=1)
 plt.xlabel("Comment Count")
 plt.ylabel("Like Count")
+plt.title("DBSCN")
 plt.show()
 
 
@@ -63,13 +111,14 @@ print(outliers_dbscn)
 #data_dbscn_outlier = X_train.drop(outliers_dbscn[0],axis = 0)
 
 data_dbscn_outlier = np.delete(X_train,outliers_dbscn[0],axis=0)
-    
 
 ######################################################
 from sklearn.cluster import KMeans
 
 # K-means kümeleme
-kmeans = KMeans(n_clusters=2, random_state=1, n_init="auto")
+kmeans = KMeans(n_clusters=2, random_state=20, n_init="auto")
+#kmeans.fit(X)
+
 clusters_kmean = kmeans.fit(X_train)
 
 # Aykırı değerleri tespit etme
@@ -85,6 +134,7 @@ plt.scatter(X_train[:, 2], X_train[:, 1], c="blue", alpha=0.5)
 plt.scatter(X_train[outliers_kmean, 2], X_train[outliers_kmean, 1], c='red', marker='x', alpha=1)
 plt.xlabel("Comment Count")
 plt.ylabel("Like Count")
+plt.title("KMeans")
 plt.show()
 
 
@@ -94,15 +144,32 @@ print(outliers_kmean)
 
 #data_kmean_outlier = data.drop(outliers_kmean,axis = 0)
 
-
 data_kmean_outlier = np.delete(X_train,outliers_kmean,axis=0)
+
+"""    
+for feature in X.columns:
+    plt.figure(figsize=(6, 4))
+    plt.scatter(X[feature], y, c=kmeans.labels_, cmap='viridis')
+    plt.xlabel(feature)
+    plt.ylabel('Lİke count')
+    plt.title(f'{feature}')
+    plt.show()    
+    
+correlation_matrix = data.corr()
+
+
+# Korelasyon matrisini görselleştirme
+sns.heatmap(correlation_matrix)
+plt.show()    
+"""
+
 
 ######################################################
 #GMM Cluster
 
 from sklearn import metrics
 from sklearn.mixture import GaussianMixture
-
+"""
 parameters=['full','tied','diag','spherical']
 n_clusters=np.arange(1,21)
 results_=pd.DataFrame(columns=['Covariance Type','Number of Cluster','Silhouette Score','Davies Bouldin Score'])
@@ -117,8 +184,7 @@ for i in parameters:
            'Davies Bouldin Score':metrics.davies_bouldin_score(df_scaled,clusters)}
            ,ignore_index=True)
 
-
-
+"""
 
 gmm = GaussianMixture(n_components=2,covariance_type="spherical",random_state=123)
 clusters_gmm = gmm.fit(X_train)
@@ -136,6 +202,7 @@ plt.scatter(X_train[:, 2], X_train[:, 1], c="blue", alpha=0.5)
 plt.scatter(X_train[outliers_gmm, 2], X_train[outliers_gmm, 1], c='red', marker='x')
 plt.xlabel("Comment Count")
 plt.ylabel("Like Count")
+plt.title("GaussianMixture")
 plt.show()
 
 print("Aykırı veri sayısı:", len(outliers_gmm))
@@ -148,13 +215,13 @@ data_gmm_outlier = np.delete(X_train,outliers_gmm,axis=0)
     
     
 ##########################################################
-"""Outlieri hesaplanmış datasetleri fit edip dorğuluk oranını hesaplama"""
+#Outlieri hesaplanmış datasetleri fit edip dorğuluk oranını hesaplama
 dbsnc_cluster = dbscn.fit_predict(data_dbscn_outlier)
 kmeans_cluster = kmeans.fit_predict(data_kmean_outlier)
 gmm_cluster = gmm.fit_predict(data_gmm_outlier)
 
 ##########################################################
-"""Outlieri hesaplanmamış datasetleri fit edip dorğuluk oranını hesaplama"""
+#Outlieri hesaplanmamış datasetleri fit edip dorğuluk oranını hesaplama
 dbsnc_cluster_nonoutlier = dbscn.fit_predict(X_test)
 kmeans_cluster_nonoutlier = kmeans.fit_predict(X_test)
 gmm_cluster_nonoutlier = gmm.fit_predict(X_test)
@@ -163,6 +230,7 @@ gmm_cluster_nonoutlier = gmm.fit_predict(X_test)
 
 ############################################################
 #algoritma karşılaştırma
+print("Scores non-outlier\n")
 
 from sklearn.metrics import silhouette_score
 
@@ -185,9 +253,9 @@ dav_gmm = davies_bouldin_score(data_gmm_outlier,gmm_cluster)
 print("Davies score k mean nonoutlier: ", dav_kmean)
 print("Davies score dbscn nonoutlier: ", dav_dbscn)
 print("Davies score gmm nonoutlier : ",dav_gmm)
-
+print("\n\n")
 ############################################################
-
+print("Scores outlier\n")
 score_dbscn_outlier = silhouette_score(X_test, dbsnc_cluster_nonoutlier)
 score_kmeans_outlier = silhouette_score(X_test, kmeans_cluster_nonoutlier)
 score_gmm_outlier = silhouette_score(X_test, gmm_cluster_nonoutlier)
@@ -221,16 +289,16 @@ plt.figure(figsize=(8, 6))
 
 # Silhouette skoru değişimleri
 plt.subplot(2, 1, 1)
-plt.plot(silhouette_scores, label="Outlier değerleri alınmış")
-plt.plot(silhouette_scores_outlier, label='Outlier değerleri alınmamış')
+plt.plot(silhouette_scores, label="Scores non-outlier")
+plt.plot(silhouette_scores_outlier, label='Scores outlier')
 plt.xticks(range(len(silhouette_scores)), ['DBSCAN', 'KMeans', 'GMM'])
 plt.ylabel('Silhouette skoru')
 plt.legend()
 
 # Davies-Bouldin skoru değişimleri
 plt.subplot(2, 1, 2)
-plt.plot(davies_scores, label='Outlier değerleri alınmış')
-plt.plot(davies_scores_outlier, label='utlier değerleri alınmamış')
+plt.plot(davies_scores, label='Scores non-outlier')
+plt.plot(davies_scores_outlier, label='Scores outlier')
 plt.xticks(range(len(davies_scores)), ['DBSCAN', 'KMeans', 'GMM'])
 plt.ylabel('Davies-Bouldin skoru')
 plt.legend()
@@ -241,22 +309,20 @@ plt.show()
 ##############################################################
 
 
-
-# Örnek skor ve davies bouldin değerleri
-score1, score2, score3 = 0.4890006831131566, 0.42946755109401225, 0.43371162464530383
-scoreo1, scoreo2, scoreo3 = 0.45065867637478385, 0.3736641992523898, 0.40846804315523894
+score1, score2, score3 = 0.48572030811677946, 0.38050738642379256, 0.39658785730975155
+scoreo1, scoreo2, scoreo3 = 0.4323568378275871, 0.3865528998888909, 0.7704501116325587
 scoresnon = [score1, score2, score3]
 scores = [scoreo1, scoreo2, scoreo3]
 
 # Değerleri DataFrame'e dönüştürme
-df = pd.DataFrame({'Scores non-outlier': scores, 'Scores outlier': scoresnon})
+df = pd.DataFrame({'Silhouette Scores non-outlier': scores, 'Scores outlier': scoresnon})
 
 # Tabloyu çizdirme
 ax = df.plot(kind='bar', figsize=(8, 6), rot=0)
 ax.set_xlabel("Models")
 plt.xticks(range(len(scores)), ['DBSCAN', 'KMeans', 'GMM'])
 
-ax.set_title("Changes in Model Scores and Davies Bouldin Values")
+ax.set_title("Changes in Silhouette Scores Values")
 ax.legend(['Scores outlier','Scores non-outlier'])
 plt.show()
 
@@ -267,4 +333,3 @@ import pickle
 #Save the trained model as pickle string to disk for future use
 filename = "dbscn_model"
 pickle.dump(dbscn, open(filename, 'wb'))
-
