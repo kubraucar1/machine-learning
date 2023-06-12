@@ -106,15 +106,15 @@ grid_search = GridSearchCV(model, param_grid, cv=5)
 grid_search.fit(X_train, y_train)
 
 # En iyi parametreler ve skorlar
-print("En İyi Parametreler:", grid_search.best_params_)
-print("En İyi Skor:", grid_search.best_score_)
+print("Adaboost Best Parameters:", grid_search.best_params_)
+print("Adaboost Best Training Accurancy:", grid_search.best_score_)
 
 
 
 
 def graph(column_name):
     
-   # Veri setindeki hedef sütunun adını belirtin
+
     
     # Grafik oluşturma
     fig, ax = plt.subplots()
