@@ -19,6 +19,7 @@ dataset= pd.read_excel("all_tweets.xlsx")
 
 
 dataset.drop_duplicates(inplace=True)
+
 #pd.read_excel("all_tweets.xlsx") 
 
 like_column = 'Like Count'
@@ -45,7 +46,14 @@ convert_k_m(comment_column)
 convert_k_m(retweet_column)
 convert_k_m(view_column)
 
-
+dataset[comment_column].fillna(dataset[comment_column].mean(), inplace=True)
+dataset[comment_column] = dataset[comment_column].astype(int)
+dataset[like_column].fillna(dataset[like_column].mean(), inplace=True)
+dataset[like_column] = dataset[like_column].astype(int)
+dataset[view_column].fillna(dataset[view_column].mean(), inplace=True)
+dataset[view_column] = dataset[view_column].astype(int)
+dataset[retweet_column].fillna(dataset[retweet_column].mean(), inplace=True)
+dataset[retweet_column] = dataset[retweet_column].astype(int)
 
 
 text_column = dataset["Text"]
@@ -57,7 +65,6 @@ def countOfWord(text):
     return liste  
 
 countOfText = countOfWord(text_column)
-
 dataset["countOfWords"] = countOfText
 
 data_positive = pd.read_csv("PositiveWordsEng.csv")
