@@ -1,14 +1,15 @@
-# -*- coding: utf-8 -*-
+# -- coding: utf-8 --
 """
 Created on Mon May  1 15:54:16 2023
 
-@author:
+@author:rabia
 """
 
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 import pickle
+import time
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.ensemble import AdaBoostRegressor
 from sklearn.linear_model import LinearRegression
@@ -17,6 +18,7 @@ from sklearn.metrics import mean_absolute_error, r2_score
 from sklearn.model_selection import GridSearchCV
 from sklearn.preprocessing import StandardScaler
 from sklearn.pipeline import make_pipeline
+
 
 regression_df=pd.read_csv('data_preprocessing/reg_dataset.csv')
 
@@ -92,15 +94,22 @@ adaboost_test_predictions = adaboost_model.predict(X_test)
 adaboost_test_mae = mean_absolute_error(y_test, adaboost_test_predictions)
 adaboost_test_r2 = r2_score(y_test, adaboost_test_predictions)
 
-# Linear Regression modelini eğitin
+# Linear Regression modelini 
+start_time = time.time()
 linear_model = LinearRegression()
 linear_model.fit(X_train, y_train)
 linear_train_predictions = linear_model.predict(X_train)
 linear_train_mae = mean_absolute_error(y_train, linear_train_predictions)
 linear_train_r2 = r2_score(y_train, linear_train_predictions)
+end_time = time.time()
+train_time = end_time - start_time
+
+start_time = time.time()
 linear_test_predictions = linear_model.predict(X_test)
 linear_test_mae = mean_absolute_error(y_test, linear_test_predictions)
 linear_test_r2 = r2_score(y_test, linear_test_predictions)
+end_time = time.time()
+test_time = end_time - start_time
 
 # Sonuçları yazdırın
 print("Random Forest:")
@@ -120,6 +129,8 @@ print("Train MAE:", linear_train_mae)
 print("Train R2:", linear_train_r2)
 print("Test MAE:", linear_test_mae)
 print("Test R2:", linear_test_r2)
+print("Train Time:", train_time, "saniye")
+print("Test Time:", test_time, "saniye")
 
 #comparing the training results
 #comparing the test results
@@ -182,5 +193,3 @@ print("Optimistic R2:", r2)
 
 with open ('regression_model.pkl', 'wb') as file:
     pickle.dump(linear_model,file)
-
-
