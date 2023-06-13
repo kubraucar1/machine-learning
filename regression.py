@@ -28,7 +28,7 @@ def graph(column_name):
     # Grafik oluşturma
     fig, ax = plt.subplots()
     
-    # Sütunu grafik olarak çiz
+    # Sütunu grafik olarak çizme
     ax.plot(regression_df[column_name])
     
     # Grafik ayarları
@@ -54,7 +54,7 @@ sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm')
 plt.title('Özellik Korelasyon Matrisi')
 plt.show()
 
-# Sınıf etiketlerine göre veri noktalarını görselleştirin
+# Sınıf etiketlerine göre veri noktalarını görselleştirme
 def data_visualization(x_label,y_label):
     
     plt.scatter(X[x_label], X[y_label])
@@ -74,7 +74,7 @@ data_visualization('countOfPositive','countOfNegative')
 
 X_train, X_test, y_train, y_test = train_test_split(X,y, test_size=0.20, random_state=100)
 
-# Random Forest Regressor modelini eğitin
+# Random Forest Regressor modelini eğitme
 rf_model = RandomForestRegressor()
 rf_model.fit(X_train, y_train)
 rf_train_predictions = rf_model.predict(X_train)
@@ -84,7 +84,7 @@ rf_test_predictions = rf_model.predict(X_test)
 rf_test_mae = mean_absolute_error(y_test, rf_test_predictions)
 rf_test_r2 = r2_score(y_test, rf_test_predictions)
 
-# AdaBoost Regressor modelini eğitin
+# AdaBoost Regressor modelini eğitme
 adaboost_model = AdaBoostRegressor()
 adaboost_model.fit(X_train, y_train)
 adaboost_train_predictions = adaboost_model.predict(X_train)
@@ -94,7 +94,7 @@ adaboost_test_predictions = adaboost_model.predict(X_test)
 adaboost_test_mae = mean_absolute_error(y_test, adaboost_test_predictions)
 adaboost_test_r2 = r2_score(y_test, adaboost_test_predictions)
 
-# Linear Regression modelini 
+# Linear Regression modelini egitme
 start_time = time.time()
 linear_model = LinearRegression()
 linear_model.fit(X_train, y_train)
@@ -111,7 +111,7 @@ linear_test_r2 = r2_score(y_test, linear_test_predictions)
 end_time = time.time()
 test_time = end_time - start_time
 
-# Sonuçları yazdırın
+# Sonuçlar
 print("Random Forest:")
 print("Train MAE:", rf_train_mae)
 print("Train R2:", rf_train_r2)
@@ -152,11 +152,11 @@ ax.set_title("Training and Test Results")
 ax.legend(['Train','Test'])
 plt.show()
 
-# Modelinizin tahminlerini ve gerçek değerleri alın
+# Modelin tahminlerini ve gerçek değerleri alma
 predictions = linear_model.predict(X_test)
 residuals = y_test - predictions
 
-# Residual scatter plotunu çizdirin
+# Residual scatter plotunu çizdirme
 plt.scatter(predictions, residuals)
 plt.axhline(y=0, color='r', linestyle='--')  # Sıfır çizgisi (hataların ortalaması)
 plt.xlabel('Tahminler')
@@ -164,7 +164,7 @@ plt.ylabel('Hatalar')
 plt.title('Residual Scatter Plot')
 plt.show()
 
-# Önişleme adımları içeren bir pipeline oluşturun
+# Önişleme adımları içeren bir pipeline oluşturma
 pipeline = make_pipeline(StandardScaler(), LinearRegression())
 
 # Hiperparametreler ve değer aralıklarını belirleyin
@@ -173,21 +173,21 @@ hyperparameters = {
     'linearregression__normalize': [True, False]
 }
 
-# GridSearchCV ile hiperparametre araması yapın
+# GridSearchCV ile hiperparametre araması yapma
 grid_search = GridSearchCV(pipeline, hyperparameters, scoring='neg_mean_absolute_error', cv=5)
 grid_search.fit(X_train, y_train)
 
-# En iyi modeli seçin
+# En iyi modeli seçme
 best_model = grid_search.best_estimator_
 
-# Test veri seti üzerinde tahmin yapın
+# Test veri seti üzerinde tahmin yapma
 predictions = best_model.predict(X_test)
 
-# MAE ve R2 değerlerini hesaplayın
+# MAE ve R2 değerlerini hesaplama
 mae = mean_absolute_error(y_test, predictions)
 r2 = r2_score(y_test, predictions)
 
-# Sonuçları yazdırın
+# Sonuçları yazdırma
 print("Optimistic MAE:", mae)
 print("Optimistic R2:", r2)
 

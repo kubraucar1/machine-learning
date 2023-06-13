@@ -20,7 +20,7 @@ data = pd.read_csv("data_preprocessing/reg_dataset.csv")
 
 X = data.drop(["Like Count"], axis=1)
 y = data["Like Count"]
-"""
+
 data.info()
 
 
@@ -65,7 +65,7 @@ plt.scatter(data["Like Count"], data['Comment Count'])
 plt.ylabel("Like Count")
 plt.xlabel('Comment Count')
 plt.show()   
-"""
+
 #####################################################
 #Scale
 from sklearn.preprocessing import StandardScaler
@@ -146,7 +146,7 @@ print(outliers_kmean)
 
 data_kmean_outlier = np.delete(X_train,outliers_kmean,axis=0)
 
-"""    
+   
 for feature in X.columns:
     plt.figure(figsize=(6, 4))
     plt.scatter(X[feature], y, c=kmeans.labels_, cmap='viridis')
@@ -161,7 +161,7 @@ correlation_matrix = data.corr()
 # Korelasyon matrisini görselleştirme
 sns.heatmap(correlation_matrix)
 plt.show()    
-"""
+
 
 
 ######################################################
@@ -169,7 +169,7 @@ plt.show()
 
 from sklearn import metrics
 from sklearn.mixture import GaussianMixture
-"""
+
 parameters=['full','tied','diag','spherical']
 n_clusters=np.arange(1,21)
 results_=pd.DataFrame(columns=['Covariance Type','Number of Cluster','Silhouette Score','Davies Bouldin Score'])
@@ -184,7 +184,7 @@ for i in parameters:
            'Davies Bouldin Score':metrics.davies_bouldin_score(df_scaled,clusters)}
            ,ignore_index=True)
 
-"""
+
 
 gmm = GaussianMixture(n_components=2,covariance_type="spherical",random_state=123)
 clusters_gmm = gmm.fit(X_train)

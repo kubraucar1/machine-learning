@@ -42,7 +42,7 @@ knn_classifier.fit(X_train, y_train)
 y_train_pred = knn_classifier.predict(X_train)
 y_test_pred = knn_classifier.predict(X_test)
 
-# Evaluate training and test accuracy scores
+# Evaluating training and test accuracy scores
 train_accuracy = accuracy_score(y_train, y_train_pred)
 test_accuracy = accuracy_score(y_test, y_test_pred)
 
@@ -85,7 +85,7 @@ start_time = time.time()
 y_train_pred = rf_classifier.predict(X_train)
 y_test_pred = rf_classifier.predict(X_test)
 
-# Evaluate training and test accuracy scores
+# Evaluating training and test accuracy scores
 train_accuracy = accuracy_score(y_train, y_train_pred)
 test_accuracy = accuracy_score(y_test, y_test_pred)
 end_time = time.time()
@@ -150,7 +150,7 @@ plt.title('Özellik Korelasyon Matrisi')
 plt.show()
 
 
-# Sınıf etiketlerine göre veri noktalarını görselleştirin
+# Sınıf etiketlerine göre veri noktalarını görselleştirme
 def data_visualization(x_label,y_label):
     
     plt.scatter(x[x_label], x[y_label])
