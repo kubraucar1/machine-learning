@@ -4,12 +4,12 @@ Created on Mon May  1 15:54:16 2023
 
 @author: kubra
 """
-
+import pickle
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
-
+import time
 
 classification_df=pd.read_csv('data_preprocessing/cl_dataset.csv')
 
@@ -73,9 +73,14 @@ print("AdaBoost Test Accuracy:", test_accuracy)
 #Random Forest Model 
 
 # Create the Random Forest classification model
+start_time = time.time()
 rf_classifier = RandomForestClassifier(n_estimators=100, random_state=42)
 rf_classifier.fit(X_train, y_train)
+end_time = time.time()
 
+train_time = end_time - start_time
+
+start_time = time.time()
 # Make predictions on training and test data
 y_train_pred = rf_classifier.predict(X_train)
 y_test_pred = rf_classifier.predict(X_test)
@@ -83,7 +88,8 @@ y_test_pred = rf_classifier.predict(X_test)
 # Evaluate training and test accuracy scores
 train_accuracy = accuracy_score(y_train, y_train_pred)
 test_accuracy = accuracy_score(y_test, y_test_pred)
-
+end_time = time.time()
+test_time = end_time - start_time
 print("Random Forest Training Accuracy:", train_accuracy)
 print("Random Forest Test Accuracy:", test_accuracy)      
 
@@ -207,3 +213,11 @@ for i in range(cm.shape[0]):
                 color="white" if cm[i, j] > thresh else "black")
 
 plt.show()
+
+with open('classification_model.pkl', 'wb') as file:
+    pickle.dump(rf_classifier, file)
+    
+
+# Eğitim ve test süresini hesaplama
+print("Train Time:", train_time, "second")
+print("Test Time:", test_time, "second")
